@@ -36,13 +36,14 @@ string SingleCandle(double open, double high, double close, double low)
 	{
 		string resultFirst = "";
 		string resultEnd = "";
+		string result = "";
 		double total = 0;
-		for(int i=0;i<14;i++)
+		for(int i=0;i<336;i++)
 			{
 				double b = MathAbs(iOpen(NULL, 60, i) - iClose(NULL, 60, i));
 				total += b;
 			}
-		double avg = total / 14;
+		double avg = total / 336;
 		if(close > open)//k线为阳线
 			{
 				//上影线长度
@@ -55,17 +56,25 @@ string SingleCandle(double open, double high, double close, double low)
 				//大阳线 最近14跟K线均值3倍以上
 				if(body >= avg * 3) resultEnd += "大阳线";
 				//中阳线 最近14跟K线均值2倍以上
-				else if(body >= avg * 2) resultEnd += "中阳线";
+				//else if(body >= avg * 2) resultEnd += "中阳线";
 				//小阳线 最近14跟K线均值1倍以上
-				else if(body >= avg * 1) resultEnd += "小阳线";
+				//else if(body >= avg * 1) resultEnd += "小阳线";
 				//小阳星 最近14跟K线均值1倍以下
-				else if(body >= avg * 0.3) resultEnd += "小阳星";
+				else if(body >= avg * 0.3) resultEnd += "小阳线";
 				else resultEnd += "十字星";
 				//长上影线
 				if(upperShadow >= avg * 3) resultFirst += "长上影";
+				else if(upperShadow <= avg * 0.5) resultFirst += "无上影";
 				//长下影线
 				if(lowerShadow >= avg * 3) resultFirst += "长下影";
-				return resultFirst + resultEnd;
+				else if(lowerShadow <= avg * 0.5) resultFirst += "无下影";
+				result = resultFirst + resultEnd;
+				if(resultEnd == "大阳线") result = "大阳线";
+				else if(resultEnd == "十字星") result = "十字星";
+				else if(result == "长上影无下影小阳线") result = "倒锤线";
+				else if(result == "无上影长下影小阳线") result = "锤子线";
+				else result = "纺锤线";
+				return result;
 			}
 		else if(close < open)//k线为阴线
 			{
@@ -79,17 +88,25 @@ string SingleCandle(double open, double high, double close, double low)
 				//大阴线 最近14跟K线均值3倍以上
 				if(body >= avg * 3) resultEnd += "大阴线";
 				//中阴线 最近14跟K线均值2倍以上
-				else if(body >= avg * 2) resultEnd += "中阴线";
+				//else if(body >= avg * 2) resultEnd += "中阴线";
 				//小阴线 最近14跟K线均值1倍以上
-				else if(body >= avg * 1) resultEnd += "小阴线";
+				//else if(body >= avg * 1) resultEnd += "小阴线";
 				//小阴线 最近14跟K线均值1倍以下
 				else if(body >= avg * 0.3) resultEnd += "小阴线";
 				else resultEnd += "十字星";
 				//长上影线
 				if(upperShadow >= avg * 3) resultFirst += "长上影";
+				else if(upperShadow <= avg * 0.5) resultFirst += "无上影";
 				//长下影线
 				if(lowerShadow >= avg * 3) resultFirst += "长下影";
-				return resultFirst + resultEnd;
+				else if(lowerShadow <= avg * 0.5) resultFirst += "无下影";
+				result = resultFirst + resultEnd;
+				if(resultEnd == "大阴线") result = "大阴线";
+				else if(resultEnd == "十字星") result = "十字星";
+				else if(result == "长上影无下影小阴线") result = "倒锤线";
+				else if(result == "无上影长下影小阴线") result = "锤子线";
+				else result = "纺锤线";
+				return result;
 			}
 		else//k线为十字星
 			{
@@ -102,9 +119,9 @@ string SingleCandle(double open, double high, double close, double low)
 
 				resultEnd += "十字星";
 				//长上影线
-				if(upperShadow >= avg * 3) resultFirst += "长上影";
+				//if(upperShadow >= avg * 3) resultFirst += "长上影";
 				//长下影线
-				if(lowerShadow >= avg * 3) resultFirst += "长下影";
+				//if(lowerShadow >= avg * 3) resultFirst += "长下影";
 				return resultFirst + resultEnd;
 			}
 	}
