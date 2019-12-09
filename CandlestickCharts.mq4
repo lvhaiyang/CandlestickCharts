@@ -32,13 +32,13 @@ Description: 分析单一K线的形态
 Input: K线的开盘价 open， 最高价 high， 收盘价 close， 最低价 low
 Return: string 返回当前K线的形态说明
 */
-string SingleCandle(double open, double high, double close, double low)
+string SingleCandle(double open, double high, double low, double close)
 	{
 		string resultFirst = "";
 		string resultEnd = "";
 		string result = "";
 		double total = 0;
-		for(int i=0;i<336;i++)
+		for(int i=1;i<337;i++)
 			{
 				double b = MathAbs(iOpen(NULL, 60, i) - iClose(NULL, 60, i));
 				total += b;
@@ -129,9 +129,9 @@ string SingleCandle(double open, double high, double close, double low)
 void OnTick()
     {
         string currentClose = DoubleToStr(iClose(NULL, 60, 0), Digits);
-        double open = iOpen(NULL, 60, 0);
-        double high = iHigh(NULL, 60, 0);
-        double low = iLow(NULL, 60, 0);
-        double close = iClose(NULL, 60, 0);
+        double open = iOpen(NULL, 60, 1);
+        double high = iHigh(NULL, 60, 1);
+        double low = iLow(NULL, 60, 1);
+        double close = iClose(NULL, 60, 1);
 		SendInformation("all", Symbol() + ": " + currentClose + "; K线形态: " + SingleCandle(open, high, low, close));
 	}
