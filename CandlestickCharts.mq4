@@ -151,33 +151,45 @@ public:
 		string CandleCombine()
 			{
 				string result = "K线无组合形态";
-				string candle1 = "";
-				string candle2 = "";
-				string candle3 = "";
-				string candle4 = "";
-				string candle5 = "";
-				for(int i=1;i<6;i++)
-					{
-						double open = iOpen(symbol, timeframe, i);
-						double high = iHigh(symbol, timeframe, i);
-						double low = iLow(symbol, timeframe, i);
-						double close = iClose(symbol, timeframe, i);
-						if(i == 1) candle1 = SingleCandle(open, high, low, close);
-						else if(i == 2) candle2 = SingleCandle(open, high, low, close);
-						else if(i == 3) candle3 = SingleCandle(open, high, low, close);
-						else if(i == 4) candle4 = SingleCandle(open, high, low, close);
-						else if(i == 5) candle5 = SingleCandle(open, high, low, close);
-					}
+				double c1_open = iOpen(symbol, timeframe, 1);
+				double c2_open = iOpen(symbol, timeframe, 2);
+				double c3_open = iOpen(symbol, timeframe, 3);
 
-				//判断最近两根K线
-				string r2 = candle2 + candle1;
-				if(r2 == "大阳线大阴线") result = "吞没形态-看跌";
-				else if(r2 == "大阴线大阳线") result = "吞没形态-看涨";
+                double c1_close = iClose(symbol, timeframe, 1);
+                double c2_close = iClose(symbol, timeframe, 2);
+                double c3_close = iClose(symbol, timeframe, 3);
 
-				//判断最近三根K线
-				string r3 = candle3 + candle2 + candle1;
-				if(r3 == "大阳线十字星大阴线")  result = "黄昏之星-看跌";
-				else if(r3 == "大阴线十字星大阳线")  result = "启明星-看涨";
+                double c1_high = iHigh(symbol, timeframe, 1);
+                double c2_high = iHigh(symbol, timeframe, 2);
+                double c3_high = iHigh(symbol, timeframe, 3);
+
+                double c1_low = iLow(symbol, timeframe, 1);
+                double c2_low = iLow(symbol, timeframe, 2);
+                double c3_low = iLow(symbol, timeframe, 3);
+
+                string c1 = SingleCandle(c1_open, c1_high, c1_low, c1_close);
+                string c2 = SingleCandle(c2_open, c2_high, c2_low, c2_close);
+                string c3 = SingleCandle(c3_open, c3_high, c3_low, c3_close);
+
+				//todo 判断最近两根K线的组合
+				if(c2_close < c1_open && c2_open > c1_close && c1 == "大阴线") result = "长阴怀抱线";
+				else if(c2_close > c1_open && c2_open < c1_close && c1 == "大阳线") result = "长阳怀抱线";
+                else if(c2_close < c1_open && c2_open > c1_close && c2 == "大阴线") result = "长阴孕育线";
+                else if(c2_close > c1_open && c2_open < c1_close && c2 == "大阳线") result = "长阳孕育线";
+                else if(c1_close > c2_open && c2 == "大阳线" && c1 == "大阴线") result = "乌云盖顶";
+                else if(c1_close < c2_open && c2 == "大阴线" && c1 == "大阳线") result = "曙光初现";
+                else if(c1_close < c2_open && c2 == "大阳线" && c1 == "大阴线") result = "倾盆大雨";
+                else if(c1_close > c2_open && c2 == "大阴线" && c1 == "大阳线") result = "旭日东升";
+
+
+
+				//todo 判断最近三根K线的组合
+				if(c1 == "大阴线" && c2 == "十字星" && c3 == "大阳线") result = "早晨十字星";
+                else if(c1 == "大阳线" && c2 == "十字星" && c3 == "大阴线") result = "黄昏十字星";
+                else if((c1 == "大阳线" || c1 == "中阳线") && (c2 == "大阳线" || c2 == "中阳线") && (c3 == "大阳线" || c3 == "中阳线")) result = "红三兵";
+                else if((c1 == "大阴线" || c1 == "中阴线") && (c2 == "大阴线" || c2 == "中阴线") && (c3 == "大阴线" || c3 == "中阴线")) result = "黑三卒";
+                else if((c1 == "大阳线") && (c2 == "小阳线" || c2 == "小阴线" || c2 == "十字星") && (c3 == "小阳线" || c3 == "小阴线" || c3 == "十字星")) result = "上涨两颗星";
+                else if((c1 == "大阴线") && (c2 == "小阳线" || c2 == "小阴线" || c2 == "十字星") && (c3 == "小阳线" || c3 == "小阴线" || c3 == "十字星")) result = "下跌两颗星";
 
 				return result;
 			}
