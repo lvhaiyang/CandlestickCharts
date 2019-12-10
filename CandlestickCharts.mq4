@@ -71,11 +71,11 @@ public:
 						//大阳线 最近14跟K线均值3倍以上
 						if(body >= avg * 3) resultEnd += "大阳线";
 						//中阳线 最近14跟K线均值2倍以上
-						//else if(body >= avg * 2) resultEnd += "中阳线";
+						else if(body >= avg * 1.5) resultEnd += "中阳线";
 						//小阳线 最近14跟K线均值1倍以上
 						//else if(body >= avg * 1) resultEnd += "小阳线";
 						//小阳星 最近14跟K线均值1倍以下
-						else if(body >= avg * 0.3) resultEnd += "小阳线";
+						else if(body >= avg * 0.1) resultEnd += "小阳线";
 						else resultEnd += "十字星";
 						//长上影线
 						if(upperShadow >= avg * 3) resultFirst += "长上影";
@@ -85,6 +85,7 @@ public:
 						else if(lowerShadow <= avg * 0.5) resultFirst += "无下影";
 						result = resultFirst + resultEnd;
 						if(resultEnd == "大阳线") result = "大阳线";
+						else if(resultEnd == "中阳线") result = "中阳线";
 						else if(resultEnd == "十字星") result = "十字星";
 						else if(result == "长上影无下影小阳线") result = "倒锤线";
 						else if(result == "无上影长下影小阳线") result = "锤子线";
@@ -103,11 +104,11 @@ public:
 						//大阴线 最近14跟K线均值3倍以上
 						if(body >= avg * 3) resultEnd += "大阴线";
 						//中阴线 最近14跟K线均值2倍以上
-						//else if(body >= avg * 2) resultEnd += "中阴线";
+						else if(body >= avg * 1.5) resultEnd += "中阴线";
 						//小阴线 最近14跟K线均值1倍以上
 						//else if(body >= avg * 1) resultEnd += "小阴线";
 						//小阴线 最近14跟K线均值1倍以下
-						else if(body >= avg * 0.3) resultEnd += "小阴线";
+						else if(body >= avg * 0.1) resultEnd += "小阴线";
 						else resultEnd += "十字星";
 						//长上影线
 						if(upperShadow >= avg * 3) resultFirst += "长上影";
@@ -117,6 +118,7 @@ public:
 						else if(lowerShadow <= avg * 0.5) resultFirst += "无下影";
 						result = resultFirst + resultEnd;
 						if(resultEnd == "大阴线") result = "大阴线";
+						else if(resultEnd == "中阴线") result = "中阴线";
 						else if(resultEnd == "十字星") result = "十字星";
 						else if(result == "长上影无下影小阴线") result = "倒锤线";
 						else if(result == "无上影长下影小阴线") result = "锤子线";
@@ -192,25 +194,34 @@ public:
 		        double high = iHigh(symbol, timeframe, 1);
 		        double low = iLow(symbol, timeframe, 1);
 		        double close = iClose(symbol, timeframe, 1);
+		        string info = ""
 		        string single = "K线形态: " + SingleCandle(open, high, low, close);
 		        string combine = "K线组合形态: " + CandleCombine();
-				SendInformation("all", Symbol() + string(timeframe) + ": " + currentClose + "; " + single + "; " + combine);
+		        if(CandleCombine() == "K线无组合形态") info = single;
+		        else info = combine;
+				SendInformation("all", Symbol() + string(timeframe) + ": " + currentClose + "; " + info);
 			}
 
 	}
 
 input string input_symbol = "OILUSD";
-input int input_timeframe = 60;
+//input int input_timeframe = 60;
 
-CandlestickCharts cc;
+CandlestickCharts ch1;
+CandlestickCharts ch4;
+CandlestickCharts cd1;
 
 int OnInit()
     {
-		cc.CandlestickChartsInit(input_symbol, input_timeframe);
+		ch1.CandlestickChartsInit(input_symbol, 60);
+		ch4.CandlestickChartsInit(input_symbol, 240);
+		cd1.CandlestickChartsInit(input_symbol, 1440);
         return(INIT_SUCCEEDED);
     }
 
 void OnTick()
     {
-		cc.run();
+		ch1.run();
+		ch4.run();
+		cd1.run();
 	}
