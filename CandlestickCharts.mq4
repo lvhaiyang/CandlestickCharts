@@ -4,7 +4,7 @@
 #property strict
 
 
-class CandlestickCharts()
+class CandlestickCharts
 	{
 public:
 		//最后一次发送消息的时间
@@ -162,11 +162,11 @@ public:
 						double high = iHigh(symbol, timeframe, i);
 						double low = iLow(symbol, timeframe, i);
 						double close = iClose(symbol, timeframe, i);
-						if(i == 1): candle1 = SingleCandle(open, high, low, close);
-						else if(i == 2): candle2 = SingleCandle(open, high, low, close);
-						else if(i == 3): candle3 = SingleCandle(open, high, low, close);
-						else if(i == 4): candle4 = SingleCandle(open, high, low, close);
-						else if(i == 5): candle5 = SingleCandle(open, high, low, close);
+						if(i == 1) candle1 = SingleCandle(open, high, low, close);
+						else if(i == 2) candle2 = SingleCandle(open, high, low, close);
+						else if(i == 3) candle3 = SingleCandle(open, high, low, close);
+						else if(i == 4) candle4 = SingleCandle(open, high, low, close);
+						else if(i == 5) candle5 = SingleCandle(open, high, low, close);
 					}
 
 				//判断最近两根K线
@@ -194,7 +194,7 @@ public:
 		        double high = iHigh(symbol, timeframe, 1);
 		        double low = iLow(symbol, timeframe, 1);
 		        double close = iClose(symbol, timeframe, 1);
-		        string info = ""
+		        string info = "";
 		        string single = "K线形态: " + SingleCandle(open, high, low, close);
 		        string combine = "K线组合形态: " + CandleCombine();
 		        if(CandleCombine() == "K线无组合形态") info = single;
@@ -202,7 +202,7 @@ public:
 				SendInformation("all", Symbol() + string(timeframe) + ": " + currentClose + "; " + info);
 			}
 
-	}
+	};
 
 input string input_symbol = "OILUSD";
 //input int input_timeframe = 60;
