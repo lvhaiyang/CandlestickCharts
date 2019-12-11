@@ -11,15 +11,16 @@ public:
 		string lastSendTime;
 		string symbol;
 		int timeframe;
-
+		string label;
 		/*
 		Description: 初始化
 		*/
-		void CandlestickChartsInit(string p_symbol, int p_timeframe)
+		void CandlestickChartsInit(string p_symbol, int p_timeframe, string p_label)
 			{
 				lastSendTime = "";
 				symbol = p_symbol;
 				timeframe = p_timeframe;
+				label = p_label;
 			}
 		/*
 		Description: 每小时发送一次消息到移动端并且打印到日志
@@ -53,6 +54,7 @@ public:
 				string resultEnd = "";
 				string result = "";
 				double total = 0;
+				//计算200日均线的柱体平均值
 				for(int i=1;i<201;i++)
 					{
 						double b = MathAbs(iOpen(symbol, timeframe, i) - iClose(symbol, timeframe, i));
@@ -68,20 +70,19 @@ public:
 						//实体长度
 						double body = close - open;
 
-						//大阳线 最近14跟K线均值3倍以上
-						if(body >= avg * 3) resultEnd += "大阳线";
-						//中阳线 最近14跟K线均值2倍以上
-						else if(body >= avg * 1.5) resultEnd += "中阳线";
-						//小阳线 最近14跟K线均值1倍以上
-						//else if(body >= avg * 1) resultEnd += "小阳线";
-						//小阳星 最近14跟K线均值1倍以下
+						//大阳线 最近200跟K线均值2倍以上
+						if(body >= avg * 2) resultEnd += "大阳线";
+						//中阳线 最近200跟K线均值1倍以上
+						else if(body >= avg * 1) resultEnd += "中阳线";
+						//小阳线 最近200跟K线均值0.1倍以上
 						else if(body >= avg * 0.1) resultEnd += "小阳线";
+						//小阳星 最近200跟K线均值0.1倍以下
 						else resultEnd += "十字星";
 						//长上影线
-						if(upperShadow >= avg * 3) resultFirst += "长上影";
+						if(upperShadow >= avg * 2) resultFirst += "长上影";
 						else if(upperShadow <= avg * 0.5) resultFirst += "无上影";
 						//长下影线
-						if(lowerShadow >= avg * 3) resultFirst += "长下影";
+						if(lowerShadow >= avg * 2) resultFirst += "长下影";
 						else if(lowerShadow <= avg * 0.5) resultFirst += "无下影";
 						result = resultFirst + resultEnd;
 						if(resultEnd == "大阳线") result = "大阳线";
@@ -101,20 +102,19 @@ public:
 						//实体长度
 						double body = open - close;
 
-						//大阴线 最近14跟K线均值3倍以上
-						if(body >= avg * 3) resultEnd += "大阴线";
-						//中阴线 最近14跟K线均值2倍以上
-						else if(body >= avg * 1.5) resultEnd += "中阴线";
-						//小阴线 最近14跟K线均值1倍以上
-						//else if(body >= avg * 1) resultEnd += "小阴线";
-						//小阴线 最近14跟K线均值1倍以下
+						//大阴线 最近200跟K线均值2倍以上
+						if(body >= avg * 2) resultEnd += "大阴线";
+						//中阴线 最近200跟K线均值1倍以上
+						else if(body >= avg * 1) resultEnd += "中阴线";
+						//小阴线 最近200跟K线均值0.1倍以上
 						else if(body >= avg * 0.1) resultEnd += "小阴线";
+						//小阴星 最近200跟K线均值0.1倍以下
 						else resultEnd += "十字星";
 						//长上影线
-						if(upperShadow >= avg * 3) resultFirst += "长上影";
+						if(upperShadow >= avg * 2) resultFirst += "长上影";
 						else if(upperShadow <= avg * 0.5) resultFirst += "无上影";
 						//长下影线
-						if(lowerShadow >= avg * 3) resultFirst += "长下影";
+						if(lowerShadow >= avg * 2) resultFirst += "长下影";
 						else if(lowerShadow <= avg * 0.5) resultFirst += "无下影";
 						result = resultFirst + resultEnd;
 						if(resultEnd == "大阴线") result = "大阴线";
@@ -135,10 +135,6 @@ public:
 						double body = open - close;
 
 						resultEnd += "十字星";
-						//长上影线
-						//if(upperShadow >= avg * 3) resultFirst += "长上影";
-						//长下影线
-						//if(lowerShadow >= avg * 3) resultFirst += "长下影";
 						return resultFirst + resultEnd;
 					}
 			}
@@ -187,7 +183,7 @@ public:
 				if(c1 == "大阴线" && c2 == "十字星" && c3 == "大阳线") result = "早晨十字星";
                 else if(c1 == "大阳线" && c2 == "十字星" && c3 == "大阴线") result = "黄昏十字星";
                 else if((c1 == "大阳线" || c1 == "中阳线") && (c2 == "大阳线" || c2 == "中阳线") && (c3 == "大阳线" || c3 == "中阳线")) result = "红三兵";
-                else if((c1 == "大阴线" || c1 == "中阴线") && (c2 == "大阴线" || c2 == "中阴线") && (c3 == "大阴线" || c3 == "中阴线")) result = "黑三卒";
+                else if((c1 == "大阴线" || c1 == "中阴线") && (c2 == "大阴线" || c2 == "中阴线") && (c3 == "大阴线" || c3 == "中阴线")) result = "三只乌鸦";
                 else if((c1 == "大阳线") && (c2 == "小阳线" || c2 == "小阴线" || c2 == "十字星") && (c3 == "小阳线" || c3 == "小阴线" || c3 == "十字星")) result = "上涨两颗星";
                 else if((c1 == "大阴线") && (c2 == "小阳线" || c2 == "小阴线" || c2 == "十字星") && (c3 == "小阳线" || c3 == "小阴线" || c3 == "十字星")) result = "下跌两颗星";
 
@@ -211,7 +207,7 @@ public:
 		        string combine = "K线组合形态: " + CandleCombine();
 		        if(CandleCombine() == "K线无组合形态") info = single;
 		        else info = combine;
-				SendInformation("all", Symbol() + string(timeframe) + ": " + currentClose + "; " + info);
+				SendInformation("all", Symbol() + label + ": " + currentClose + "; " + info);
 			}
 
 	};
@@ -225,9 +221,9 @@ CandlestickCharts cd1;
 
 int OnInit()
     {
-		ch1.CandlestickChartsInit(input_symbol, 60);
-		ch4.CandlestickChartsInit(input_symbol, 240);
-		cd1.CandlestickChartsInit(input_symbol, 1440);
+		ch1.CandlestickChartsInit(input_symbol, 60, "1小时图");
+		ch4.CandlestickChartsInit(input_symbol, 240, "4小时图");
+		cd1.CandlestickChartsInit(input_symbol, 1440, "日线图");
         return(INIT_SUCCEEDED);
     }
 
