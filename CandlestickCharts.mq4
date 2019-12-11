@@ -12,6 +12,21 @@ public:
 		string symbol;
 		int timeframe;
 		string label;
+		//定义K线及组合的名字
+		string DA_YANG_XIAN;
+        string ZHONG_YANG_XIAN;
+        string XIAO_YANG_XIAN;
+        string DA_YIN_XIAN;
+        string ZHONG_YIN_XIAN;
+        string XIAO_YIN_XIAN;
+        string SHI_ZI_XING;
+        string DAO_CHUI_XIAN;
+        string CHUI_ZI_XIAN;
+        string FANG_CHUI_XIAN;
+        string CHANG_SHANG_YING_XIAN;
+        string CHANG_XIA_YING_XIAN;
+        string WU_SHANG_YING_XIAN;
+        string WU_XIA_YING_XIAN;
 		/*
 		Description: 初始化
 		*/
@@ -21,6 +36,20 @@ public:
 				symbol = p_symbol;
 				timeframe = p_timeframe;
 				label = p_label;
+				DA_YANG_XIAN = "大阳线";
+                ZHONG_YANG_XIAN = "中阳线";
+                XIAO_YANG_XIAN = "小阳线";
+                DA_YIN_XIAN = "大阴线";
+                ZHONG_YIN_XIAN = "中阴线";
+                XIAO_YIN_XIAN = "小阴线";
+                SHI_ZI_XING = "十字星";
+                DAO_CHUI_XIAN = "倒锤线";
+                CHUI_ZI_XIAN = "锤子线";
+                FANG_CHUI_XIAN = "纺锤线";
+                CHANG_SHANG_YING_XIAN = "长上影线";
+                CHANG_XIA_YING_XIAN = "长下影线";
+                WU_SHANG_YING_XIAN = "无上影线";
+                WU_XIA_YING_XIAN = "无下影线";
 			}
 		/*
 		Description: 每小时发送一次消息到移动端并且打印到日志
@@ -71,26 +100,26 @@ public:
 						double body = close - open;
 
 						//大阳线 最近200跟K线均值2倍以上
-						if(body >= avg * 2) resultEnd += "大阳线";
+						if(body >= avg * 2) resultEnd += DA_YANG_XIAN;
 						//中阳线 最近200跟K线均值1倍以上
-						else if(body >= avg * 1) resultEnd += "中阳线";
+						else if(body >= avg * 1) resultEnd += ZHONG_YANG_XIAN;
 						//小阳线 最近200跟K线均值0.1倍以上
-						else if(body >= avg * 0.1) resultEnd += "小阳线";
+						else if(body >= avg * 0.1) resultEnd += XIAO_YANG_XIAN;
 						//小阳星 最近200跟K线均值0.1倍以下
-						else resultEnd += "十字星";
+						else resultEnd += SHI_ZI_XING;
 						//长上影线
-						if(upperShadow >= avg * 2) resultFirst += "长上影";
-						else if(upperShadow <= avg * 0.5) resultFirst += "无上影";
+						if(upperShadow >= avg * 2) resultFirst += CHANG_SHANG_YING_XIAN;
+						else if(upperShadow <= avg * 0.5) resultFirst += WU_SHANG_YING_XIAN;
 						//长下影线
-						if(lowerShadow >= avg * 2) resultFirst += "长下影";
-						else if(lowerShadow <= avg * 0.5) resultFirst += "无下影";
+						if(lowerShadow >= avg * 2) resultFirst += CHANG_XIA_YING_XIAN;
+						else if(lowerShadow <= avg * 0.5) resultFirst += WU_XIA_YING_XIAN;
 						result = resultFirst + resultEnd;
-						if(resultEnd == "大阳线") result = "大阳线";
-						else if(resultEnd == "中阳线") result = "中阳线";
-						else if(resultEnd == "十字星") result = "十字星";
-						else if(result == "长上影无下影小阳线") result = "倒锤线";
-						else if(result == "无上影长下影小阳线") result = "锤子线";
-						else result = "纺锤线";
+						if(resultEnd == DA_YANG_XIAN) result = DA_YANG_XIAN;
+						else if(resultEnd == ZHONG_YANG_XIAN) result = ZHONG_YANG_XIAN;
+						else if(resultEnd == SHI_ZI_XING) result = SHI_ZI_XING;
+						else if(result == CHANG_SHANG_YING_XIAN + WU_XIA_YING_XIAN + XIAO_YANG_XIAN) result = DAO_CHUI_XIAN;
+						else if(result == WU_SHANG_YING_XIAN + CHANG_XIA_YING_XIAN + XIAO_YANG_XIAN) result = CHUI_ZI_XIAN;
+						else result = FANG_CHUI_XIAN;
 						return result;
 					}
 				else if(close < open)//k线为阴线
@@ -103,26 +132,26 @@ public:
 						double body = open - close;
 
 						//大阴线 最近200跟K线均值2倍以上
-						if(body >= avg * 2) resultEnd += "大阴线";
+						if(body >= avg * 2) resultEnd += DA_YIN_XIAN;
 						//中阴线 最近200跟K线均值1倍以上
-						else if(body >= avg * 1) resultEnd += "中阴线";
+						else if(body >= avg * 1) resultEnd += ZHONG_YIN_XIAN;
 						//小阴线 最近200跟K线均值0.1倍以上
-						else if(body >= avg * 0.1) resultEnd += "小阴线";
+						else if(body >= avg * 0.1) resultEnd += XIAO_YIN_XIAN;
 						//小阴星 最近200跟K线均值0.1倍以下
-						else resultEnd += "十字星";
+						else resultEnd += SHI_ZI_XING;
 						//长上影线
-						if(upperShadow >= avg * 2) resultFirst += "长上影";
-						else if(upperShadow <= avg * 0.5) resultFirst += "无上影";
+						if(upperShadow >= avg * 2) resultFirst += CHANG_SHANG_YING_XIAN;
+						else if(upperShadow <= avg * 0.5) resultFirst += WU_SHANG_YING_XIAN;
 						//长下影线
-						if(lowerShadow >= avg * 2) resultFirst += "长下影";
-						else if(lowerShadow <= avg * 0.5) resultFirst += "无下影";
+						if(lowerShadow >= avg * 2) resultFirst += CHANG_XIA_YING_XIAN;
+						else if(lowerShadow <= avg * 0.5) resultFirst += WU_XIA_YING_XIAN;
 						result = resultFirst + resultEnd;
-						if(resultEnd == "大阴线") result = "大阴线";
-						else if(resultEnd == "中阴线") result = "中阴线";
-						else if(resultEnd == "十字星") result = "十字星";
-						else if(result == "长上影无下影小阴线") result = "倒锤线";
-						else if(result == "无上影长下影小阴线") result = "锤子线";
-						else result = "纺锤线";
+						if(resultEnd == DA_YIN_XIAN) result = DA_YIN_XIAN;
+						else if(resultEnd == ZHONG_YIN_XIAN) result = ZHONG_YIN_XIAN;
+						else if(resultEnd == SHI_ZI_XING) result = SHI_ZI_XING;
+						else if(result == CHANG_SHANG_YING_XIAN + WU_XIA_YING_XIAN + XIAO_YIN_XIAN) result = DAO_CHUI_XIAN;
+						else if(result == WU_SHANG_YING_XIAN + CHANG_XIA_YING_XIAN + XIAO_YIN_XIAN) result = CHUI_ZI_XIAN;
+						else result = FANG_CHUI_XIAN;
 						return result;
 					}
 				else//k线为十字星
@@ -134,7 +163,7 @@ public:
 						//实体长度
 						double body = open - close;
 
-						resultEnd += "十字星";
+						resultEnd += SHI_ZI_XING;
 						return resultFirst + resultEnd;
 					}
 			}
@@ -146,7 +175,7 @@ public:
 		*/
 		string CandleCombine()
 			{
-				string result = "K线无组合形态";
+				string result = "";
 				//存放10个K线的 open high low close
 				double candleInfo[10][4];
 				double candleType[10];
@@ -163,26 +192,31 @@ public:
 		                candleType[i] = SingleCandle(open, high, low, close);
 					}
 
-				//todo 判断最近两根K线的组合
-				if(candleInfo[1][3] < candleInfo[0][0] && candleInfo[1][0] > candleInfo[0][3] && c1 == "大阴线") result = "长阴怀抱线";
-//				if(c2_close < c1_open && c2_open > c1_close && c1 == "大阴线") result = "长阴怀抱线";
-//				else if(c2_close > c1_open && c2_open < c1_close && c1 == "大阳线") result = "长阳怀抱线";
-//                else if(c2_close < c1_open && c2_open > c1_close && c2 == "大阴线") result = "长阴孕育线";
-//                else if(c2_close > c1_open && c2_open < c1_close && c2 == "大阳线") result = "长阳孕育线";
-//                else if(c1_close > c2_open && c2 == "大阳线" && c1 == "大阴线") result = "乌云盖顶";
-//                else if(c1_close < c2_open && c2 == "大阴线" && c1 == "大阳线") result = "曙光初现";
-//                else if(c1_close < c2_open && c2 == "大阳线" && c1 == "大阴线") result = "倾盆大雨";
-//                else if(c1_close > c2_open && c2 == "大阴线" && c1 == "大阳线") result = "旭日东升";
+				string values[100];
+				int index = 0;
+				for(int i=0;i<10;i++)
+				    {
+				        //todo 判断最近两根K线的组合
+				        if(candleInfo[i+1][1] < candleInfo[i][0] && candleInfo[i+1][2] > candleInfo[i][3] && candleType[i] == DA_YIN_XIAN) result += "长阴怀抱线;";
+				        if(candleInfo[i+1][1] < candleInfo[i][3] && candleInfo[i+1][2] > candleInfo[i][0] && candleType[i] == DA_YANG_XIAN) result +=  "长阳怀抱线;";
+				        if(candleInfo[i+1][0] > candleInfo[i][1] && candleInfo[i+1][3] < candleInfo[i][2] && candleType[i+1] == DA_YIN_XIAN) result +=  "长阴孕育线;";
+				        if(candleInfo[i+1][3] > candleInfo[i][1] && candleInfo[i+1][0] < candleInfo[i][2] && candleType[i+1] == DA_YANG_XIAN) result += "长阳孕育线;";
+				        if(candleInfo[i+1][0] <= candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result +=  "乌云盖顶;";
+				        if(candleInfo[i+1][0] > candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result +=  "倾盆大雨;";
+				        if(candleInfo[i+1][0] >= candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result +=  "曙光初现;";
+				        if(candleInfo[i+1][0] < candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result +=  "旭日东升;";
 
 
+				        //todo 判断最近三根K线的组合
+				        if(candleType[i+2] == DA_YIN_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YANG_XIAN) result += "早晨十字星;";
+				        if(candleType[i+2] == DA_YANG_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YIN_XIAN) result += "黄昏十字星;";
+				        if((candleType[i+2] == DA_YANG_XIAN || candleType[i+2] == ZHONG_YANG_XIAN) && (candleType[i+1] == DA_YANG_XIAN || candleType[i+1] == ZHONG_YANG_XIAN) && (candleType[i] == DA_YANG_XIAN || candleType[i] == ZHONG_YANG_XIAN)) result += "红三兵;";
+				        if((candleType[i+2] == DA_YIN_XIAN || candleType[i+2] == ZHONG_YIN_XIAN) && (candleType[i+1] == DA_YIN_XIAN || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == DA_YIN_XIAN || candleType[i] == ZHONG_YIN_XIAN))  result += "三只乌鸦;";
+				        if((candleType[i+2] == DA_YANG_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == XIAO_YANG_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == XIAO_YANG_XIAN)) result += "上涨两颗星;";
+				        if((candleType[i+2] == DA_YIN_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == ZHONG_YIN_XIAN))  result += "下跌两颗星;";
 
-				//todo 判断最近三根K线的组合
-//				if(c1 == "大阴线" && c2 == "十字星" && c3 == "大阳线") result = "早晨十字星";
-//                else if(c1 == "大阳线" && c2 == "十字星" && c3 == "大阴线") result = "黄昏十字星";
-//                else if((c1 == "大阳线" || c1 == "中阳线") && (c2 == "大阳线" || c2 == "中阳线") && (c3 == "大阳线" || c3 == "中阳线")) result = "红三兵";
-//                else if((c1 == "大阴线" || c1 == "中阴线") && (c2 == "大阴线" || c2 == "中阴线") && (c3 == "大阴线" || c3 == "中阴线")) result = "三只乌鸦";
-//                else if((c1 == "大阳线") && (c2 == "小阳线" || c2 == "小阴线" || c2 == "十字星") && (c3 == "小阳线" || c3 == "小阴线" || c3 == "十字星")) result = "上涨两颗星";
-//                else if((c1 == "大阴线") && (c2 == "小阳线" || c2 == "小阴线" || c2 == "十字星") && (c3 == "小阳线" || c3 == "小阴线" || c3 == "十字星")) result = "下跌两颗星";
+
+				    }
 
 				return result;
 			}
@@ -202,7 +236,7 @@ public:
 		        string info = "";
 		        string single = "K线形态: " + SingleCandle(open, high, low, close);
 		        string combine = "K线组合形态: " + CandleCombine();
-		        if(CandleCombine() == "K线无组合形态") info = single;
+		        if(CandleCombine() == "") info = single;
 		        else info = combine;
 				SendInformation("all", Symbol() + label + ": " + currentClose + "; " + info);
 			}
