@@ -177,8 +177,8 @@ public:
 			{
 				string result = "";
 				//存放10个K线的 open high low close
-				double candleInfo[10][4];
-				double candleType[10];
+				double candleInfo[30][4];
+				string candleType[30];
 				for(int i=0;i<10;i++)
 					{
 						double open = iOpen(symbol, timeframe, i);
@@ -192,8 +192,6 @@ public:
 		                candleType[i] = SingleCandle(open, high, low, close);
 					}
 
-				string values[100];
-				int index = 0;
 				for(int i=0;i<10;i++)
 				    {
 				        //todo 判断最近两根K线的组合
