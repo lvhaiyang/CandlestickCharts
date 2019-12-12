@@ -241,12 +241,21 @@ public:
 
 input string input_symbol = "OILUSD";//交易品种
 input int input_timeframe = 60;//K线周期(单位:分)
-input string input_label = "1小时图";//标签
+string input_label = "";//标签
 
 CandlestickCharts cc;
 
 int OnInit()
     {
+        if(input_timeframe == 1) input_label = "1分钟图";
+        else if(input_timeframe == 3) input_label = "3分钟图";
+        else if(input_timeframe == 5) input_label = "5分钟图";
+        else if(input_timeframe == 10) input_label = "10分钟图";
+        else if(input_timeframe == 15) input_label = "15分钟图";
+        else if(input_timeframe == 30) input_label = "30分钟图";
+        else if(input_timeframe == 60) input_label = "1小时图";
+        else if(input_timeframe == 240) input_label = "4小时图";
+        else if(input_timeframe == 1440) input_label = "日线图";
 		cc.CandlestickChartsInit(input_symbol, input_timeframe, input_label);
         return(INIT_SUCCEEDED);
     }
