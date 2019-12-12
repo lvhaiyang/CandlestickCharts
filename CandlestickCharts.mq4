@@ -192,7 +192,7 @@ public:
 		                candleType[i] = SingleCandle(open, high, low, close);
 					}
 
-				for(int i=0;i<10;i++)
+				for(int i=0;i<5;i++)
 				    {
 				        //todo 判断最近两根K线的组合
 				        if(candleInfo[i+1][1] < candleInfo[i][0] && candleInfo[i+1][2] > candleInfo[i][3] && candleType[i] == DA_YIN_XIAN) result += "长阴吞没线;";
