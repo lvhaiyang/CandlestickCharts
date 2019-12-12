@@ -239,24 +239,19 @@ public:
 
 	};
 
-input string input_symbol = "OILUSD";
-//input int input_timeframe = 60;
+input string input_symbol = "OILUSD";//交易品种
+input int input_timeframe = 60;//K线周期(单位:分)
+input string input_label = "1小时图";//标签
 
-CandlestickCharts ch1;
-CandlestickCharts ch4;
-CandlestickCharts cd1;
+CandlestickCharts cc;
 
 int OnInit()
     {
-		ch1.CandlestickChartsInit(input_symbol, 60, "1小时图");
-		ch4.CandlestickChartsInit(input_symbol, 240, "4小时图");
-		cd1.CandlestickChartsInit(input_symbol, 1440, "日线图");
+		cc.CandlestickChartsInit(input_symbol, input_timeframe, input_label);
         return(INIT_SUCCEEDED);
     }
 
 void OnTick()
     {
-		ch1.run();
-		ch4.run();
-		cd1.run();
+		cc.run();
 	}
