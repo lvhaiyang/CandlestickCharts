@@ -8,7 +8,6 @@ class CandlestickCharts
 	{
 public:
 		//最后一次发送消息的时间
-//		string lastSendTime;
         int lastSendTime;
 		string symbol;
 		int timeframe;
@@ -33,7 +32,6 @@ public:
 		*/
 		void CandlestickChartsInit(string p_symbol, int p_timeframe, string p_label)
 			{
-//				lastSendTime = "";
 				lastSendTime = 0;
 				symbol = p_symbol;
 				timeframe = p_timeframe;
@@ -222,8 +220,7 @@ public:
 		void run()
 			{
 				//每小时执行一次发送消息
-//				string currentTime = string(Year()) + string(Month()) + string(Day()) + string(Hour());
-		        int currentTime = (TimeGMTOffset() / 60) / timeframe;
+		        int currentTime = (int(TimeGMT()) / 60) / timeframe;
 		        if(currentTime == lastSendTime) return;
 		        lastSendTime = currentTime;
 		        //发送消息内容
