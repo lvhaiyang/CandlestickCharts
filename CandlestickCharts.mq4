@@ -52,24 +52,14 @@ public:
                 WU_XIA_YING_XIAN = "无下影线";
 			}
 		/*
-		Description: 每小时发送一次消息到移动端并且打印到日志
-		Input: type: 消息类型(all 发送移动端同时打印日志， print 仅打印日志)
-			   information: 需要发送的消息内容
+		Description: 发送消息到移动端并且打印到日志
+		Input: information: 需要发送的消息内容
 		Return: 无
 		*/
-		void SendInformation(string type, string information)
+		void SendInformation(string information)
 		    {
-		        string currentTime = string(Year()) + string(Month()) + string(Day()) + string(Hour());
-		        if(currentTime != lastSendTime)
-		            {
-		                if(type=="print") Print(information);
-		                else
-		                    {
-		                        SendNotification(information);
-		                        Print(information);
-		                    }
-		                lastSendTime = currentTime;
-		            }
+                SendNotification(information);
+                Print(information);
 		    }
 
 		/*
@@ -214,6 +204,9 @@ public:
 				        if((candleType[i+2] == DA_YIN_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == ZHONG_YIN_XIAN))  result += "下跌两颗星;";
 				        if(candleType[i+2] == DA_YANG_XIAN && (candleInfo[i+1][0] >= candleInfo[i+1][3]) && candleType[i] == DA_YANG_XIAN)  result += "多方炮;";
 				        if(candleType[i+2] == DA_YIN_XIAN && (candleInfo[i+1][0] <= candleInfo[i+1][3]) && candleType[i] == DA_YIN_XIAN)  result += "空方炮;";
+
+
+				        //todo 判断最近四根K线的组合
 				    }
 
 				return result;
@@ -226,6 +219,11 @@ public:
 		*/
 		void run()
 			{
+				//每小时执行一次发送消息
+				string currentTime = string(Year()) + string(Month()) + string(Day()) + string(Hour());
+		        if(currentTime == lastSendTime) return;
+		        lastSendTime = currentTime;
+		        //发送消息内容
 		        string currentClose = DoubleToStr(iClose(symbol, timeframe, 0), Digits);
 		        double open = iOpen(symbol, timeframe, 1);
 		        double high = iHigh(symbol, timeframe, 1);
@@ -236,7 +234,7 @@ public:
 		        string combine = "K线组合形态: " + CandleCombine();
 		        if(CandleCombine() == "") info = single;
 		        else info = combine;
-				SendInformation("all", Symbol() + label + ": " + currentClose + "; " + info);
+				SendInformation(Symbol() + label + ": " + currentClose + "; " + info);
 			}
 
 	};
