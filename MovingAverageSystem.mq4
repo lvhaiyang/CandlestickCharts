@@ -179,7 +179,7 @@ public:
 				double maLong[30];
 				double maMiddel[30];
 				double maShort[30];
-				for(int i=1;i<31;i++)
+				for(int i=1;i<30;i++)
 					{
 						double open = iOpen(symbol, timeframe, i);
 		                double high = iHigh(symbol, timeframe, i);
@@ -271,9 +271,9 @@ public:
 input string input_symbol = "OILUSD";//交易品种
 input int input_timeframe = 60;//K线周期(单位:分)
 string input_label = "";//标签
-input int input_maShortPeriod;//短期均线
-input int input_maMiddelPeriod;//中期均线
-input int input_maLongPeriod;//长期均线
+input int input_maShortPeriod = 10;//短期均线
+input int input_maMiddelPeriod = 20;//中期均线
+input int input_maLongPeriod = 40;//长期均线
 
 CandlestickCharts cc;
 
