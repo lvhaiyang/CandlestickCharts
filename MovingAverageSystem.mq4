@@ -288,6 +288,7 @@ int OnInit()
         else if(input_timeframe == 60) input_label = "1小时图";
         else if(input_timeframe == 240) input_label = "4小时图";
         else if(input_timeframe == 1440) input_label = "日线图";
+        input_label = input_label + "MA:" + string(input_maShortPeriod) + ";" + string(input_maMiddelPeriod) + ";" + string(input_maLongPeriod);
 		cc.CandlestickChartsInit(input_symbol, input_timeframe, input_label, input_maShortPeriod, input_maMiddelPeriod, input_maLongPeriod);
         return(INIT_SUCCEEDED);
     }
