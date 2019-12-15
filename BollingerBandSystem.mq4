@@ -261,8 +261,8 @@ int OnInit()
         else if(input_timeframe == 60) input_label = "1小时图";
         else if(input_timeframe == 240) input_label = "4小时图";
         else if(input_timeframe == 1440) input_label = "日线图";
-        input_label = input_label + "布林带周期:" + string(input_period) + ";标准差:" + string(input_maMiddelPeriod);
-		cc.CandlestickChartsInit(input_symbol, input_timeframe, input_label, input_maShortPeriod, input_maMiddelPeriod, input_maLongPeriod);
+        input_label = input_label + "布林带周期:" + string(input_period) + ";标准差:" + string(input_deviation);
+		cc.CandlestickChartsInit(input_symbol, input_timeframe, input_label, input_period, input_deviation);
         return(INIT_SUCCEEDED);
     }
 
