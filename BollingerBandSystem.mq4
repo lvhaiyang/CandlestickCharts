@@ -12,9 +12,8 @@ public:
 		string symbol;
 		int timeframe;
 		string label;
-        int maLongPeriod;
-        int maMiddelPeriod;
-        int maShortPeriod;
+        int period;
+        int deviation;
         //定义K线及组合的名字
 		string DA_YANG_XIAN;
         string ZHONG_YANG_XIAN;
@@ -33,15 +32,14 @@ public:
 		/*
 		Description: 初始化
 		*/
-		void CandlestickChartsInit(string p_symbol, int p_timeframe, string p_label, int p_maShortPeriod, int p_maMiddelPeriod, int p_maLongPeriod)
+		void CandlestickChartsInit(string p_symbol, int p_timeframe, string p_label, int p_period, int p_deviation)
 			{
 				lastSendTime = 0;
 				symbol = p_symbol;
 				timeframe = p_timeframe;
 				label = p_label;
-				maShortPeriod = p_maShortPeriod;
-				maMiddelPeriod = p_maMiddelPeriod;
-				maLongPeriod = p_maLongPeriod;
+				period = p_period;
+				deviation = p_deviation;
 				DA_YANG_XIAN = "大阳线";
                 ZHONG_YANG_XIAN = "中阳线";
                 XIAO_YANG_XIAN = "小阳线";
@@ -170,15 +168,15 @@ public:
 		Input: 无
 		Return: string 返回当前均线系统说明
 		*/
-		string MovingAverageSystem()
+		string BollingerBandSystem()
 			{
 				string result = "";
 				//存放10个K线的 open high low close
 				double candleInfo[30][4];
 				string candleType[30];
-				double maLong[30];
-				double maMiddel[30];
-				double maShort[30];
+				double bollMain[30];
+				double bollUpper[30];
+				double bollLower[30];
 				for(int i=1;i<30;i++)
 					{
 						double open = iOpen(symbol, timeframe, i);
@@ -190,49 +188,25 @@ public:
 		                candleInfo[i][2] = low;
 		                candleInfo[i][3] = close;
 		                candleType[i] = SingleCandle(open, high, low, close);
-		                maLong[i] = iMA(symbol,timeframe,maLongPeriod,0,MODE_SMA,PRICE_CLOSE,i);
-		                maMiddel[i] = iMA(symbol,timeframe,maMiddelPeriod,0,MODE_SMA,PRICE_CLOSE,i);
-		                maShort[i] = iMA(symbol,timeframe,maShortPeriod,0,MODE_SMA,PRICE_CLOSE,i);
+		                bollMain[i] = iBands(symbol,timeframe,period,deviation,0,PRICE_CLOSE,MODE_MAIN,i);
+		                bollUpper[i] = iBands(symbol,timeframe,period,deviation,0,PRICE_LOW,MODE_UPPER,i);
+		                bollLower[i] = iBands(symbol,timeframe,period,deviation,0,PRICE_LOW,MODE_LOWER,i);
 					}
 
 				for(int i=28;i>0;i--)
 				    {
 				        string result_i = "";
-				        //短期均线上穿中期均线
-                        if(maShort[i+1] <= maMiddel[i+1] && maShort[i] > maMiddel[i])
-                            {
-                                //中期均线在长期均线上方
-                                if(maMiddel[i] > maLong[i]) result_i = "梅开二度";
-                                else result_i = "生根发芽";
-                            }
-                        //中期均线上穿长期均线
-                        if(maMiddel[i+1] <= maLong[i+1] && maMiddel[i] > maLong[i]) result_i = "红杏出墙";
-                        //均线空头排列
-                        if(maShort[i] <= maMiddel[i] && maMiddel[i] <= maLong[i])
-                            {
-                                result_i = "空头排列";
-                                //K线开盘价小于短期均线，收盘价大于长期均线
-                                if(candleInfo[i][0] <= maShort[i] && candleInfo[i][3] >= maLong[i]) result_i = "火箭炮";
-                            }
+				        //收盘价突破布林上轨道
+				        if(candleInfo[i][3] > bollUpper[i] && candleInfo[i+1][3] <= bollUpper[i]) result_i = "K线突破布林上轨道";
+				        //收盘价从上轨道外侧回到布林带中
+				        if(candleInfo[i][3] <= bollUpper[i] && candleInfo[i+1][3] > bollUpper[i]) result_i = "K线回从上轨道到布林带中";
+                        //收盘价跌破布林下轨道
+                        if(candleInfo[i][3] < bollLower[i] && candleInfo[i+1][3] >= bollLower[i]) result_i = "K线跌破布林下轨道";
+                        //收盘价从下轨道回到布林带中
+                        if(candleInfo[i][3] > bollLower[i] && candleInfo[i+1][3] < bollLower[i]) result_i = "K线从下轨道回到布林带中";
 
-
-				        //短期均线下穿中期均线
-                        if(maShort[i+1] >= maMiddel[i+1] && maShort[i] < maMiddel[i])
-                            {
-                                //中期均线在长期均线下方
-                                if(maMiddel[i] < maLong[i]) result_i = "雪上加霜";
-                                else result_i = "上树拔梯";
-                            }
-                        //中期均线下穿长期均线
-                        if(maMiddel[i+1] >= maLong[i+1] && maMiddel[i] < maLong[i]) result_i = "落井下石";
-                        //均线多头排列
-                        if(maShort[i] >= maMiddel[i] && maMiddel[i] >= maLong[i])
-                            {
-                                result_i = "多头排列";
-                                //K线开盘价大于短期均线，收盘价小于长期均线
-                                if(candleInfo[i][0] >= maShort[i] && candleInfo[i][3] <= maLong[i]) result_i = "流星锤";
-                            }
-
+                        //收盘价在布林带中
+                        if(candleInfo[i][3] >= bollLower[i] && candleInfo[i][3] <= bollLower[i] && candleInfo[i+1][3] >= bollLower[i] && candleInfo[i+1][3] <= bollLower[i]) result_i = "K线运行在布林带中";
 
                         if(result_i != "") result = candleType[i] + "-" + result_i;
 
@@ -260,9 +234,9 @@ public:
 		        double close = iClose(symbol, timeframe, 1);
 		        string info = "";
 		        string single = "K线形态: " + SingleCandle(open, high, low, close);
-		        string maSystem = "均线系统: " + MovingAverageSystem();
-		        if(MovingAverageSystem() == "") info = single;
-		        else info = maSystem;
+		        string bollSystem = "布林带系统: " + BollingerBandSystem();
+		        if(BollingerBandSystem() == "") info = single;
+		        else info = bollSystem;
 				SendInformation(Symbol() + label + ": " + currentClose + "; " + info);
 			}
 
@@ -271,9 +245,8 @@ public:
 input string input_symbol = "OILUSD";//交易品种
 input int input_timeframe = 60;//K线周期(单位:分)
 string input_label = "";//标签
-input int input_maShortPeriod = 10;//短期均线
-input int input_maMiddelPeriod = 20;//中期均线
-input int input_maLongPeriod = 40;//长期均线
+input int input_period = 20;//周期
+input int input_deviation = 2;//标准差
 
 CandlestickCharts cc;
 
@@ -288,7 +261,7 @@ int OnInit()
         else if(input_timeframe == 60) input_label = "1小时图";
         else if(input_timeframe == 240) input_label = "4小时图";
         else if(input_timeframe == 1440) input_label = "日线图";
-        input_label = input_label + "MA:" + string(input_maShortPeriod) + ";" + string(input_maMiddelPeriod) + ";" + string(input_maLongPeriod);
+        input_label = input_label + "布林带周期:" + string(input_period) + ";标准差:" + string(input_maMiddelPeriod);
 		cc.CandlestickChartsInit(input_symbol, input_timeframe, input_label, input_maShortPeriod, input_maMiddelPeriod, input_maLongPeriod);
         return(INIT_SUCCEEDED);
     }
