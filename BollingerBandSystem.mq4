@@ -205,8 +205,10 @@ public:
                         //收盘价从下轨道回到布林带中
                         if(candleInfo[i][3] > bollLower[i] && candleInfo[i+1][3] < bollLower[i]) result_i = "K线从下轨道回到布林带中";
 
-                        //收盘价在布林带中
-                        if(candleInfo[i][3] >= bollLower[i] && candleInfo[i][3] <= bollLower[i] && candleInfo[i+1][3] >= bollLower[i] && candleInfo[i+1][3] <= bollLower[i]) result_i = "K线运行在布林带中";
+                        //收盘价在布林带上轨道外侧
+                        if(candleInfo[i][3] > bollUpper[i] && candleInfo[i+1][3] > bollUpper[i]) result_i = "K线运行在布林带上轨道外侧";
+                        //收盘价在布林带下轨道外侧
+                        if(candleInfo[i][3] < bollLower[i] && candleInfo[i+1][3] < bollLower[i]) result_i = "K线运行在布林带下轨道外侧";
 
                         if(result_i != "") result = candleType[i] + "-" + result_i;
 
