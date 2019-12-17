@@ -208,7 +208,7 @@ public:
                         //中期均线上穿长期均线
                         if(maMiddel[i+1] <= maLong[i+1] && maMiddel[i] > maLong[i]) result_i = "红杏出墙";
                         //均线空头排列
-                        if(maShort[i] <= maMiddel[i] && maMiddel[i] <= maLong[i])
+                        if(maShort[i] <= maMiddel[i] && maMiddel[i] <= maLong[i] && maShort[i+1] <= maMiddel[i+1] && maMiddel[i+1] <= maLong[i+1])
                             {
                                 result_i = "空头排列";
                                 //K线开盘价小于短期均线，收盘价大于长期均线
@@ -226,7 +226,7 @@ public:
                         //中期均线下穿长期均线
                         if(maMiddel[i+1] >= maLong[i+1] && maMiddel[i] < maLong[i]) result_i = "落井下石";
                         //均线多头排列
-                        if(maShort[i] >= maMiddel[i] && maMiddel[i] >= maLong[i])
+                        if(maShort[i] >= maMiddel[i] && maMiddel[i] >= maLong[i] && maShort[i+1] >= maMiddel[i+1] && maMiddel[i+1] >= maLong[i+1])
                             {
                                 result_i = "多头排列";
                                 //K线开盘价大于短期均线，收盘价小于长期均线
