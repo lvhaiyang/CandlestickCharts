@@ -116,7 +116,7 @@ public:
 						else if(resultEnd == SHI_ZI_XING) result = SHI_ZI_XING;
 						else if(result == CHANG_SHANG_YING_XIAN + WU_XIA_YING_XIAN + XIAO_YANG_XIAN) result = DAO_CHUI_XIAN;
 						else if(result == WU_SHANG_YING_XIAN + CHANG_XIA_YING_XIAN + XIAO_YANG_XIAN) result = CHUI_ZI_XIAN;
-						else result = FANG_CHUI_XIAN;
+						else result = XIAO_YANG_XIAN;
 						return result;
 					}
 				else if(close < open)//k线为阴线
@@ -148,7 +148,7 @@ public:
 						else if(resultEnd == SHI_ZI_XING) result = SHI_ZI_XING;
 						else if(result == CHANG_SHANG_YING_XIAN + WU_XIA_YING_XIAN + XIAO_YIN_XIAN) result = DAO_CHUI_XIAN;
 						else if(result == WU_SHANG_YING_XIAN + CHANG_XIA_YING_XIAN + XIAO_YIN_XIAN) result = CHUI_ZI_XIAN;
-						else result = FANG_CHUI_XIAN;
+						else result = XIAO_YIN_XIAN;
 						return result;
 					}
 				else//k线为十字星
@@ -163,6 +163,60 @@ public:
 						resultEnd += SHI_ZI_XING;
 						return resultFirst + resultEnd;
 					}
+			}
+
+		/*
+		Description: 分析K线组合的形态
+		Input: 无
+		Return: string 返回当前K线组合的形态说明
+		*/
+		string CandleCombine()
+			{
+				string result = "";
+				//存放10个K线的 open high low close
+				double candleInfo[30][4];
+				string candleType[30];
+				for(int i=1;i<30;i++)
+					{
+						double open = iOpen(symbol, timeframe, i);
+		                double high = iHigh(symbol, timeframe, i);
+		                double low = iLow(symbol, timeframe, i);
+		                double close = iClose(symbol, timeframe, i);
+		                candleInfo[i][0] = open;
+		                candleInfo[i][1] = high;
+		                candleInfo[i][2] = low;
+		                candleInfo[i][3] = close;
+		                candleType[i] = SingleCandle(open, high, low, close);
+					}
+
+				for(int i=28;i>0;i--)
+				    {
+				        //todo 判断最近两根K线的组合
+				        if(candleInfo[i+1][1] < candleInfo[i][0] && candleInfo[i+1][2] > candleInfo[i][3] && candleType[i] == DA_YIN_XIAN) result = "长阴吞没线;";
+				        if(candleInfo[i+1][1] < candleInfo[i][3] && candleInfo[i+1][2] > candleInfo[i][0] && candleType[i] == DA_YANG_XIAN) result =  "长阳吞没线;";
+				        if(candleInfo[i+1][0] > candleInfo[i][1] && candleInfo[i+1][3] < candleInfo[i][2] && candleType[i+1] == DA_YIN_XIAN) result =  "长阴孕育线;";
+				        if(candleInfo[i+1][3] > candleInfo[i][1] && candleInfo[i+1][0] < candleInfo[i][2] && candleType[i+1] == DA_YANG_XIAN) result = "长阳孕育线;";
+				        if(candleInfo[i+1][0] <= candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result =  "乌云盖顶;";
+				        if(candleInfo[i+1][0] > candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result =  "倾盆大雨;";
+				        if(candleInfo[i+1][0] >= candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result =  "曙光初现;";
+				        if(candleInfo[i+1][0] < candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result =  "旭日东升;";
+
+
+				        //todo 判断最近三根K线的组合
+				        if(candleType[i+2] == DA_YIN_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YANG_XIAN) result = "早晨十字星;";
+				        if(candleType[i+2] == DA_YANG_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YIN_XIAN) result = "黄昏十字星;";
+				        if((candleType[i+2] == DA_YANG_XIAN || candleType[i+2] == ZHONG_YANG_XIAN) && (candleType[i+1] == DA_YANG_XIAN || candleType[i+1] == ZHONG_YANG_XIAN) && (candleType[i] == DA_YANG_XIAN || candleType[i] == ZHONG_YANG_XIAN)) result = "红三兵;";
+				        if((candleType[i+2] == DA_YIN_XIAN || candleType[i+2] == ZHONG_YIN_XIAN) && (candleType[i+1] == DA_YIN_XIAN || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == DA_YIN_XIAN || candleType[i] == ZHONG_YIN_XIAN))  result = "三只乌鸦;";
+				        if((candleType[i+2] == DA_YANG_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == XIAO_YANG_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == XIAO_YANG_XIAN)) result = "上涨两颗星;";
+				        if((candleType[i+2] == DA_YIN_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == ZHONG_YIN_XIAN))  result = "下跌两颗星;";
+				        if(candleType[i+2] == DA_YANG_XIAN && (candleInfo[i+1][0] >= candleInfo[i+1][3]) && candleType[i] == DA_YANG_XIAN)  result = "多方炮;";
+				        if(candleType[i+2] == DA_YIN_XIAN && (candleInfo[i+1][0] <= candleInfo[i+1][3]) && candleType[i] == DA_YIN_XIAN)  result = "空方炮;";
+
+
+				        //todo 判断最近四根K线的组合
+				    }
+
+				return result;
 			}
 
 		/*
@@ -197,22 +251,21 @@ public:
 
 				for(int i=28;i>0;i--)
 				    {
-				        string result_i = "";
 				        //短期均线上穿中期均线
                         if(maShort[i+1] <= maMiddel[i+1] && maShort[i] > maMiddel[i])
                             {
                                 //中期均线在长期均线上方
-                                if(maMiddel[i] > maLong[i]) result_i = "梅开二度";
-                                else result_i = "生根发芽";
+                                if(maMiddel[i] > maLong[i]) result = "梅开二度";
+                                else result = "生根发芽";
                             }
                         //中期均线上穿长期均线
-                        if(maMiddel[i+1] <= maLong[i+1] && maMiddel[i] > maLong[i]) result_i = "红杏出墙";
+                        if(maMiddel[i+1] <= maLong[i+1] && maMiddel[i] > maLong[i]) result = "红杏出墙";
                         //均线空头排列
                         if(maShort[i] <= maMiddel[i] && maMiddel[i] <= maLong[i] && maShort[i+1] <= maMiddel[i+1] && maMiddel[i+1] <= maLong[i+1])
                             {
-                                result_i = "空头排列";
+                                result = "空头排列";
                                 //K线开盘价小于短期均线，收盘价大于长期均线
-                                if(candleInfo[i][0] <= maShort[i] && candleInfo[i][3] >= maLong[i]) result_i = "火箭炮";
+                                if(candleInfo[i][0] <= maShort[i] && candleInfo[i][3] >= maLong[i]) result = "火箭炮";
                             }
 
 
@@ -220,22 +273,18 @@ public:
                         if(maShort[i+1] >= maMiddel[i+1] && maShort[i] < maMiddel[i])
                             {
                                 //中期均线在长期均线下方
-                                if(maMiddel[i] < maLong[i]) result_i = "雪上加霜";
-                                else result_i = "上树拔梯";
+                                if(maMiddel[i] < maLong[i]) result = "雪上加霜";
+                                else result = "上树拔梯";
                             }
                         //中期均线下穿长期均线
-                        if(maMiddel[i+1] >= maLong[i+1] && maMiddel[i] < maLong[i]) result_i = "落井下石";
+                        if(maMiddel[i+1] >= maLong[i+1] && maMiddel[i] < maLong[i]) result = "落井下石";
                         //均线多头排列
                         if(maShort[i] >= maMiddel[i] && maMiddel[i] >= maLong[i] && maShort[i+1] >= maMiddel[i+1] && maMiddel[i+1] >= maLong[i+1])
                             {
-                                result_i = "多头排列";
+                                result = "多头排列";
                                 //K线开盘价大于短期均线，收盘价小于长期均线
-                                if(candleInfo[i][0] >= maShort[i] && candleInfo[i][3] <= maLong[i]) result_i = "流星锤";
+                                if(candleInfo[i][0] >= maShort[i] && candleInfo[i][3] <= maLong[i]) result = "流星锤";
                             }
-
-
-                        if(result_i != "") result = candleType[i] + "-" + result_i;
-
 				    }
 
 				return result;
@@ -258,12 +307,12 @@ public:
 		        double high = iHigh(symbol, timeframe, 1);
 		        double low = iLow(symbol, timeframe, 1);
 		        double close = iClose(symbol, timeframe, 1);
-		        string info = "";
+
 		        string single = "K线形态: " + SingleCandle(open, high, low, close);
+		        string combine = "K线组合形态: " + CandleCombine();
 		        string maSystem = "均线系统: " + MovingAverageSystem();
-		        if(MovingAverageSystem() == "") info = single;
-		        else info = maSystem;
-				SendInformation(Symbol() + label + ": " + currentClose + "; " + info);
+		        string info = single + "; " + combine + "; " + maSystem;
+				SendInformation(Symbol() + ": " + label + "; 当前价格:" + currentClose + "; \n" + info);
 			}
 
 	};

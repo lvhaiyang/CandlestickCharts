@@ -114,7 +114,7 @@ public:
 						else if(resultEnd == SHI_ZI_XING) result = SHI_ZI_XING;
 						else if(result == CHANG_SHANG_YING_XIAN + WU_XIA_YING_XIAN + XIAO_YANG_XIAN) result = DAO_CHUI_XIAN;
 						else if(result == WU_SHANG_YING_XIAN + CHANG_XIA_YING_XIAN + XIAO_YANG_XIAN) result = CHUI_ZI_XIAN;
-						else result = FANG_CHUI_XIAN;
+						else result = XIAO_YANG_XIAN;
 						return result;
 					}
 				else if(close < open)//k线为阴线
@@ -146,7 +146,7 @@ public:
 						else if(resultEnd == SHI_ZI_XING) result = SHI_ZI_XING;
 						else if(result == CHANG_SHANG_YING_XIAN + WU_XIA_YING_XIAN + XIAO_YIN_XIAN) result = DAO_CHUI_XIAN;
 						else if(result == WU_SHANG_YING_XIAN + CHANG_XIA_YING_XIAN + XIAO_YIN_XIAN) result = CHUI_ZI_XIAN;
-						else result = FANG_CHUI_XIAN;
+						else result = XIAO_YIN_XIAN;
 						return result;
 					}
 				else//k线为十字星
@@ -164,9 +164,63 @@ public:
 			}
 
 		/*
-		Description: 分析均线系统
+		Description: 分析K线组合的形态
 		Input: 无
-		Return: string 返回当前均线系统说明
+		Return: string 返回当前K线组合的形态说明
+		*/
+		string CandleCombine()
+			{
+				string result = "";
+				//存放10个K线的 open high low close
+				double candleInfo[30][4];
+				string candleType[30];
+				for(int i=1;i<30;i++)
+					{
+						double open = iOpen(symbol, timeframe, i);
+		                double high = iHigh(symbol, timeframe, i);
+		                double low = iLow(symbol, timeframe, i);
+		                double close = iClose(symbol, timeframe, i);
+		                candleInfo[i][0] = open;
+		                candleInfo[i][1] = high;
+		                candleInfo[i][2] = low;
+		                candleInfo[i][3] = close;
+		                candleType[i] = SingleCandle(open, high, low, close);
+					}
+
+				for(int i=28;i>0;i--)
+				    {
+				        //todo 判断最近两根K线的组合
+				        if(candleInfo[i+1][1] < candleInfo[i][0] && candleInfo[i+1][2] > candleInfo[i][3] && candleType[i] == DA_YIN_XIAN) result = "长阴吞没线;";
+				        if(candleInfo[i+1][1] < candleInfo[i][3] && candleInfo[i+1][2] > candleInfo[i][0] && candleType[i] == DA_YANG_XIAN) result =  "长阳吞没线;";
+				        if(candleInfo[i+1][0] > candleInfo[i][1] && candleInfo[i+1][3] < candleInfo[i][2] && candleType[i+1] == DA_YIN_XIAN) result =  "长阴孕育线;";
+				        if(candleInfo[i+1][3] > candleInfo[i][1] && candleInfo[i+1][0] < candleInfo[i][2] && candleType[i+1] == DA_YANG_XIAN) result = "长阳孕育线;";
+				        if(candleInfo[i+1][0] <= candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result =  "乌云盖顶;";
+				        if(candleInfo[i+1][0] > candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result =  "倾盆大雨;";
+				        if(candleInfo[i+1][0] >= candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result =  "曙光初现;";
+				        if(candleInfo[i+1][0] < candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result =  "旭日东升;";
+
+
+				        //todo 判断最近三根K线的组合
+				        if(candleType[i+2] == DA_YIN_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YANG_XIAN) result = "早晨十字星;";
+				        if(candleType[i+2] == DA_YANG_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YIN_XIAN) result = "黄昏十字星;";
+				        if((candleType[i+2] == DA_YANG_XIAN || candleType[i+2] == ZHONG_YANG_XIAN) && (candleType[i+1] == DA_YANG_XIAN || candleType[i+1] == ZHONG_YANG_XIAN) && (candleType[i] == DA_YANG_XIAN || candleType[i] == ZHONG_YANG_XIAN)) result = "红三兵;";
+				        if((candleType[i+2] == DA_YIN_XIAN || candleType[i+2] == ZHONG_YIN_XIAN) && (candleType[i+1] == DA_YIN_XIAN || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == DA_YIN_XIAN || candleType[i] == ZHONG_YIN_XIAN))  result = "三只乌鸦;";
+				        if((candleType[i+2] == DA_YANG_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == XIAO_YANG_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == XIAO_YANG_XIAN)) result = "上涨两颗星;";
+				        if((candleType[i+2] == DA_YIN_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == ZHONG_YIN_XIAN))  result = "下跌两颗星;";
+				        if(candleType[i+2] == DA_YANG_XIAN && (candleInfo[i+1][0] >= candleInfo[i+1][3]) && candleType[i] == DA_YANG_XIAN)  result = "多方炮;";
+				        if(candleType[i+2] == DA_YIN_XIAN && (candleInfo[i+1][0] <= candleInfo[i+1][3]) && candleType[i] == DA_YIN_XIAN)  result = "空方炮;";
+
+
+				        //todo 判断最近四根K线的组合
+				    }
+
+				return result;
+			}
+
+		/*
+		Description: 布林带系统
+		Input: 无
+		Return: string 返回当前布林带系统说明
 		*/
 		string BollingerBandSystem()
 			{
@@ -195,25 +249,20 @@ public:
 
 				for(int i=28;i>0;i--)
 				    {
-				        string result_i = "";
 				        //收盘价突破布林上轨道
-				        if(candleInfo[i][3] > bollUpper[i] && candleInfo[i+1][3] <= bollUpper[i]) result_i = "K线突破布林上轨道";
+				        if(candleInfo[i][3] > bollUpper[i] && candleInfo[i+1][3] <= bollUpper[i]) result = "K线突破布林上轨道";
 				        //收盘价从上轨道外侧回到布林带中
-				        if(candleInfo[i][3] <= bollUpper[i] && candleInfo[i+1][3] > bollUpper[i]) result_i = "K线回从上轨道到布林带中";
+				        if(candleInfo[i][3] <= bollUpper[i] && candleInfo[i+1][3] > bollUpper[i]) result = "K线回从上轨道到布林带中";
                         //收盘价跌破布林下轨道
-                        if(candleInfo[i][3] < bollLower[i] && candleInfo[i+1][3] >= bollLower[i]) result_i = "K线跌破布林下轨道";
+                        if(candleInfo[i][3] < bollLower[i] && candleInfo[i+1][3] >= bollLower[i]) result = "K线跌破布林下轨道";
                         //收盘价从下轨道回到布林带中
-                        if(candleInfo[i][3] > bollLower[i] && candleInfo[i+1][3] < bollLower[i]) result_i = "K线从下轨道回到布林带中";
+                        if(candleInfo[i][3] > bollLower[i] && candleInfo[i+1][3] < bollLower[i]) result = "K线从下轨道回到布林带中";
 
                         //收盘价在布林带上轨道外侧
-                        if(candleInfo[i][3] > bollUpper[i] && candleInfo[i+1][3] > bollUpper[i]) result_i = "K线运行在布林带上轨道外侧";
+                        if(candleInfo[i][3] > bollUpper[i] && candleInfo[i+1][3] > bollUpper[i]) result = "K线运行在布林带上轨道外侧";
                         //收盘价在布林带下轨道外侧
-                        if(candleInfo[i][3] < bollLower[i] && candleInfo[i+1][3] < bollLower[i]) result_i = "K线运行在布林带下轨道外侧";
-
-                        if(result_i != "") result = candleType[i] + "-" + result_i;
-
+                        if(candleInfo[i][3] < bollLower[i] && candleInfo[i+1][3] < bollLower[i]) result = "K线运行在布林带下轨道外侧";
 				    }
-
 				return result;
 			}
 
@@ -234,12 +283,12 @@ public:
 		        double high = iHigh(symbol, timeframe, 1);
 		        double low = iLow(symbol, timeframe, 1);
 		        double close = iClose(symbol, timeframe, 1);
-		        string info = "";
+
 		        string single = "K线形态: " + SingleCandle(open, high, low, close);
-		        string bollSystem = "布林带系统: " + BollingerBandSystem();
-		        if(BollingerBandSystem() == "") info = single;
-		        else info = bollSystem;
-				SendInformation(Symbol() + label + ": " + currentClose + "; " + info);
+		        string combine = "K线组合形态: " + CandleCombine();
+		        string boll = "布林带系统: " + BollingerBandSystem();
+		        string info = single + "; " + combine + "; " + boll;
+				SendInformation(Symbol() + ": " + label + "; 当前价格:" + currentClose + "; \n" + info);
 			}
 
 	};
