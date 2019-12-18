@@ -311,7 +311,10 @@ public:
 		        string single = "K线形态: " + SingleCandle(open, high, low, close);
 		        string combine = "K线组合形态: " + CandleCombine();
 		        string maSystem = "均线系统: " + MovingAverageSystem();
-		        string info = single + "; " + combine + "; " + maSystem;
+		        string candle = "";
+		        if(CandleCombine() == "") candle = single;
+		        else candle = combine;
+		        string info = candle + "; " + maSystem;
 				SendInformation(Symbol() + ": " + label + "; 当前价格:" + currentClose + "; \n" + info);
 			}
 

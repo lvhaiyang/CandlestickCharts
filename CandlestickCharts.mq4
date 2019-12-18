@@ -232,7 +232,10 @@ public:
 
 		        string single = "K线形态: " + SingleCandle(open, high, low, close);
 		        string combine = "K线组合形态: " + CandleCombine();
-		        string info = single + "; " + combine;
+		        string candle = "";
+		        if(CandleCombine() == "") candle = single;
+		        else candle = combine;
+		        string info = candle;
 				SendInformation(Symbol() + ": " + label + "; 当前价格:" + currentClose + "; \n" + info);
 			}
 

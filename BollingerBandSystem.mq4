@@ -287,7 +287,10 @@ public:
 		        string single = "K线形态: " + SingleCandle(open, high, low, close);
 		        string combine = "K线组合形态: " + CandleCombine();
 		        string boll = "布林带系统: " + BollingerBandSystem();
-		        string info = single + "; " + combine + "; " + boll;
+		        string candle = "";
+		        if(CandleCombine() == "") candle = single;
+		        else candle = combine;
+		        string info = candle + "; " + boll;
 				SendInformation(Symbol() + ": " + label + "; 当前价格:" + currentClose + "; \n" + info);
 			}
 
