@@ -289,7 +289,7 @@ public:
 		        string boll = "布林带系统: " + BollingerBandSystem();
 		        string candle = "";
 		        if(CandleCombine() == "") candle = single;
-		        else candle = combine;
+		        else candle = single + "; " + combine;
 		        string info = candle + "; " + boll;
 				SendInformation(Symbol() + ": " + label + "; 当前价格:" + currentClose + "; \n" + info);
 			}

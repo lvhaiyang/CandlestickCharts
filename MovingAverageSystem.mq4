@@ -313,7 +313,7 @@ public:
 		        string maSystem = "均线系统: " + MovingAverageSystem();
 		        string candle = "";
 		        if(CandleCombine() == "") candle = single;
-		        else candle = combine;
+		        else candle = single + "; " + combine;
 		        string info = candle + "; " + maSystem;
 				SendInformation(Symbol() + ": " + label + "; 当前价格:" + currentClose + "; \n" + info);
 			}

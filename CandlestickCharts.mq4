@@ -234,7 +234,7 @@ public:
 		        string combine = "K线组合形态: " + CandleCombine();
 		        string candle = "";
 		        if(CandleCombine() == "") candle = single;
-		        else candle = combine;
+		        else candle = single + "; " + combine;
 		        string info = candle;
 				SendInformation(Symbol() + ": " + label + "; 当前价格:" + currentClose + "; \n" + info);
 			}
