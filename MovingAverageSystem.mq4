@@ -174,9 +174,9 @@ public:
 			{
 				string result = "";
 				//存放10个K线的 open high low close
-				double candleInfo[30][4];
-				string candleType[30];
-				for(int i=1;i<30;i++)
+				double candleInfo[40][4];
+				string candleType[40];
+				for(int i=1;i<40;i++)
 					{
 						double open = iOpen(symbol, timeframe, i);
 		                double high = iHigh(symbol, timeframe, i);
