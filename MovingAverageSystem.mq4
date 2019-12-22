@@ -192,25 +192,25 @@ public:
 				for(int i=28;i>0;i--)
 				    {
 				        //todo 判断最近两根K线的组合
-				        if(candleInfo[i+1][1] < candleInfo[i][0] && candleInfo[i+1][2] > candleInfo[i][3] && candleType[i] == DA_YIN_XIAN) result = "长阴吞没线;";
-				        if(candleInfo[i+1][1] < candleInfo[i][3] && candleInfo[i+1][2] > candleInfo[i][0] && candleType[i] == DA_YANG_XIAN) result =  "长阳吞没线;";
-				        if(candleInfo[i+1][0] > candleInfo[i][1] && candleInfo[i+1][3] < candleInfo[i][2] && candleType[i+1] == DA_YIN_XIAN) result =  "长阴孕育线;";
-				        if(candleInfo[i+1][3] > candleInfo[i][1] && candleInfo[i+1][0] < candleInfo[i][2] && candleType[i+1] == DA_YANG_XIAN) result = "长阳孕育线;";
-				        if(candleInfo[i+1][0] <= candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result =  "乌云盖顶;";
-				        if(candleInfo[i+1][0] > candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result =  "倾盆大雨;";
-				        if(candleInfo[i+1][0] >= candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result =  "曙光初现;";
-				        if(candleInfo[i+1][0] < candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result =  "旭日东升;";
+				        if(candleInfo[i+1][1] < candleInfo[i][0] && candleInfo[i+1][2] > candleInfo[i][3] && candleType[i] == DA_YIN_XIAN) result = "长阴吞没线";
+				        if(candleInfo[i+1][1] < candleInfo[i][3] && candleInfo[i+1][2] > candleInfo[i][0] && candleType[i] == DA_YANG_XIAN) result =  "长阳吞没线";
+				        if(candleInfo[i+1][0] > candleInfo[i][1] && candleInfo[i+1][3] < candleInfo[i][2] && candleType[i+1] == DA_YIN_XIAN) result =  "长阴孕育线";
+				        if(candleInfo[i+1][3] > candleInfo[i][1] && candleInfo[i+1][0] < candleInfo[i][2] && candleType[i+1] == DA_YANG_XIAN) result = "长阳孕育线";
+				        if(candleInfo[i+1][0] <= candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result =  "乌云盖顶";
+				        if(candleInfo[i+1][0] > candleInfo[i][3] && candleType[i+1] == DA_YANG_XIAN && candleType[i] == DA_YIN_XIAN) result =  "倾盆大雨";
+				        if(candleInfo[i+1][0] >= candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result =  "曙光初现";
+				        if(candleInfo[i+1][0] < candleInfo[i][3] && candleType[i+1] == DA_YIN_XIAN && candleType[i] == DA_YANG_XIAN) result =  "旭日东升";
 
 
 				        //todo 判断最近三根K线的组合
-				        if(candleType[i+2] == DA_YIN_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YANG_XIAN) result = "早晨十字星;";
-				        if(candleType[i+2] == DA_YANG_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YIN_XIAN) result = "黄昏十字星;";
-				        if((candleType[i+2] == DA_YANG_XIAN || candleType[i+2] == ZHONG_YANG_XIAN) && (candleType[i+1] == DA_YANG_XIAN || candleType[i+1] == ZHONG_YANG_XIAN) && (candleType[i] == DA_YANG_XIAN || candleType[i] == ZHONG_YANG_XIAN)) result = "红三兵;";
-				        if((candleType[i+2] == DA_YIN_XIAN || candleType[i+2] == ZHONG_YIN_XIAN) && (candleType[i+1] == DA_YIN_XIAN || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == DA_YIN_XIAN || candleType[i] == ZHONG_YIN_XIAN))  result = "三只乌鸦;";
-				        if((candleType[i+2] == DA_YANG_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == XIAO_YANG_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == XIAO_YANG_XIAN)) result = "上涨两颗星;";
-				        if((candleType[i+2] == DA_YIN_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == ZHONG_YIN_XIAN))  result = "下跌两颗星;";
-				        if(candleType[i+2] == DA_YANG_XIAN && (candleInfo[i+1][0] >= candleInfo[i+1][3]) && candleType[i] == DA_YANG_XIAN)  result = "多方炮;";
-				        if(candleType[i+2] == DA_YIN_XIAN && (candleInfo[i+1][0] <= candleInfo[i+1][3]) && candleType[i] == DA_YIN_XIAN)  result = "空方炮;";
+				        if(candleType[i+2] == DA_YIN_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YANG_XIAN) result = "早晨十字星";
+				        if(candleType[i+2] == DA_YANG_XIAN && candleType[i+1] == SHI_ZI_XING && candleType[i] == DA_YIN_XIAN) result = "黄昏十字星";
+				        if((candleType[i+2] == DA_YANG_XIAN || candleType[i+2] == ZHONG_YANG_XIAN) && (candleType[i+1] == DA_YANG_XIAN || candleType[i+1] == ZHONG_YANG_XIAN) && (candleType[i] == DA_YANG_XIAN || candleType[i] == ZHONG_YANG_XIAN)) result = "红三兵";
+				        if((candleType[i+2] == DA_YIN_XIAN || candleType[i+2] == ZHONG_YIN_XIAN) && (candleType[i+1] == DA_YIN_XIAN || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == DA_YIN_XIAN || candleType[i] == ZHONG_YIN_XIAN))  result = "三只乌鸦";
+				        if((candleType[i+2] == DA_YANG_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == XIAO_YANG_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == XIAO_YANG_XIAN)) result = "上涨两颗星";
+				        if((candleType[i+2] == DA_YIN_XIAN) && (candleType[i+1] == SHI_ZI_XING || candleType[i+1] == ZHONG_YIN_XIAN) && (candleType[i] == SHI_ZI_XING || candleType[i] == ZHONG_YIN_XIAN))  result = "下跌两颗星";
+				        if(candleType[i+2] == DA_YANG_XIAN && (candleInfo[i+1][0] >= candleInfo[i+1][3]) && candleType[i] == DA_YANG_XIAN)  result = "多方炮";
+				        if(candleType[i+2] == DA_YIN_XIAN && (candleInfo[i+1][0] <= candleInfo[i+1][3]) && candleType[i] == DA_YIN_XIAN)  result = "空方炮";
 
 
 				        //todo 判断最近四根K线的组合
