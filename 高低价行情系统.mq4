@@ -299,7 +299,7 @@ public:
 		        if(CandleCombine() == "") candle = single;
 		        else candle = single + "; " + combine;
 		        string info = candle + "; " + hello_system;
-				SendInformation(Symbol() + ": " + label + "; 当前价格:" + currentClose + "; \n" + info);
+				SendInformation("【行情系统】" + symbol + ": 当前价格:" + currentClose + "\n" + label + "\n" + info);
 			}
 
 	};
@@ -324,8 +324,9 @@ int OnInit()
         else if(input_timeframe == 60) input_label = "1小时图";
         else if(input_timeframe == 240) input_label = "4小时图";
         else if(input_timeframe == 1440) input_label = "日线图";
-        input_label = input_label + ":" + string(input_period1) + ";" + string(input_period2) + ";" + string(input_period3);
+        input_label = input_label + "参数:" + string(input_period1) + ";" + string(input_period2) + ";" + string(input_period3);
 		cc.CandlestickChartsInit(input_symbol, input_timeframe, input_label, input_period1, input_period2, input_period3);
+		cc.run();
         return(INIT_SUCCEEDED);
     }
 
